@@ -15,7 +15,15 @@ This code also relies on some function from the GaussianMixture class of sklearn
 """
 
 
-import numpy as np 
+import numpy as np
+
+# pylogit imports the following: from collections import Iterable. However, in Python 3, the abstract base classes like Iterable have been moved to the collections.abc module. 
+# To fix this issue, either locate the files in pylogit where Iterable is imported and change the line to: from collections.abc import Iterable
+# Or add the following before importing pylogit in the code.
+import collections.abc
+import collections
+collections.Iterable = collections.abc.Iterable
+
 import pylogit
 from scipy.sparse import coo_matrix
 from scipy.optimize import minimize
@@ -733,136 +741,136 @@ def displayOutput(outputFile, startTime, llEstimation, llNull, llTestNormalized,
 
     
         
-    print ("\n")
-    print ("Number of Parameters:".ljust(45,' ')), (str(num_parameters_total).rjust(10,' '))  
-    print ("Number of Observations:".ljust(45, ' ')),(str(np.unique(obsID).shape[0]).rjust(10,' '))   
-    print ("Null Log-Likelihood:".ljust(45, ' ')),(str(round(llNull,2)).rjust(10,' '))   
-    print ("Joint Log-Likelihood:".ljust(45, ' ')),(str(round(llEstimation,2)).rjust(10,' '))    
-    print ("AIC-Joint:".ljust(45, ' ')),(str(round(AIC,2)).rjust(10,' ')) 
-    print ("BIC-Joint:".ljust(45, ' ')),(str(round(BIC)).rjust(10,' '))
-    print ("Estimation time (minutes):".ljust(45, ' ')),(str(round(timeElapsed,2)).rjust(10,' ')) 
-    print ("\n")
+    print("\n")
+    print("Number of Parameters:".ljust(45,' '), str(num_parameters_total).rjust(10,' '))
+    print("Number of Observations:".ljust(45, ' '), str(np.unique(obsID).shape[0]).rjust(10,' '))   
+    print("Null Log-Likelihood:".ljust(45, ' '), str(round(llNull,2)).rjust(10,' '))   
+    print("Joint Log-Likelihood:".ljust(45, ' '), str(round(llEstimation,2)).rjust(10,' '))    
+    print("AIC-Joint:".ljust(45, ' '), str(round(AIC,2)).rjust(10,' ')) 
+    print("BIC-Joint:".ljust(45, ' '), str(round(BIC)).rjust(10,' '))
+    print("Estimation time (minutes):".ljust(45, ' '), str(round(timeElapsed,2)).rjust(10,' ')) 
+    print("\n")
 
-    print ("Marginal Log-Likelihood:".ljust(45, ' ')),(str(round(llNormalized,2)).rjust(10,' '))    
-    print ("AIC:".ljust(45, ' ')),(str(round(AIC_Normalized,2)).rjust(10,' ')) 
-    print ("BIC:".ljust(45, ' ')),(str(round(BIC_Normalized)).rjust(10,' '))
-    print ("\n")
+    print("Marginal Log-Likelihood:".ljust(45, ' '), str(round(llNormalized,2)).rjust(10,' '))    
+    print("AIC:".ljust(45, ' '), str(round(AIC_Normalized,2)).rjust(10,' ')) 
+    print("BIC:".ljust(45, ' '), str(round(BIC_Normalized)).rjust(10,' '))
+    print("\n")
     
     # Display screen
 
-    print
-    print 'Class-Specific Choice Model:'
-    print '-----------------------------------------------------------------------------------------'
-    print ("Number of Parameters:".ljust(45,' ')), (str(num_class_specific_model).rjust(10,' '))
+    print()
+    print('Class-Specific Choice Model:')
+    print('-----------------------------------------------------------------------------------------')
+    print("Number of Parameters:".ljust(45,' ')), (str(num_class_specific_model).rjust(10,' '))
     
     for s in range(0, nClasses):
         print
-        print 'Class %d Model: ' %(s + 1)
-        print '-----------------------------------------------------------------------------------------'
-        print 'Variables                                     parameters    std_err     t_stat    p_value'
-        print '-----------------------------------------------------------------------------------------'
+        print('Class %d Model: ' %(s + 1))
+        print('-----------------------------------------------------------------------------------------')
+        print('Variables                                     parameters    std_err     t_stat    p_value')
+        print('-----------------------------------------------------------------------------------------')
         for k in range(0, len(namesExpVarsClassSpec[s])):
-            print '%-45s %10.4f %10.4f %10.4f %10.4f' %(namesExpVarsClassSpec[s][k], paramClassSpec[s][k], 
-                    stdErrClassSpec[s][k], paramClassSpec[s][k]/stdErrClassSpec[s][k], scipy.stats.norm.sf(abs(paramClassSpec[s][k]/stdErrClassSpec[s][k]))*2 )
-        print '-----------------------------------------------------------------------------------------'
+            print('%-45s %10.4f %10.4f %10.4f %10.4f' %(namesExpVarsClassSpec[s][k], paramClassSpec[s][k], 
+                    stdErrClassSpec[s][k], paramClassSpec[s][k]/stdErrClassSpec[s][k], scipy.stats.norm.sf(abs(paramClassSpec[s][k]/stdErrClassSpec[s][k]))*2 ))
+        print('-----------------------------------------------------------------------------------------')
 
         
-    print ("\n")
-    print 'Class Membership Model:'
-    print '-----------------------------------------------------------------------------------------'
-    print ("Number of Parameters:".ljust(45,' ')), (str(num_class_membership_model).rjust(10,' '))
-    print
-    print '-----------------------------------------------------------------------------------------'
-    print 'Mixing Coefficients'
-    print '-----------------------------------------------------------------------------------------'
+    print("\n")
+    print('Class Membership Model:')
+    print('-----------------------------------------------------------------------------------------')
+    print("Number of Parameters:".ljust(45,' '), str(num_class_membership_model).rjust(10,' '))
+    print()
+    print('-----------------------------------------------------------------------------------------')
+    print('Mixing Coefficients')
+    print('-----------------------------------------------------------------------------------------')
     for k in range(0, nClasses):
         ClassN = 'Class %d' %(k + 1)
-        print '%-45s' %ClassN ,
-        print '%10.4f' %mixing_coefficients[k]
-    print
-    print '-----------------------------------------------------------------------------------------'
+        print('%-45s' %ClassN, end=' ')
+        print('%10.4f' %mixing_coefficients[k])
+    print()
+    print('-----------------------------------------------------------------------------------------')
     printMeans = 'Means (Continuous)'
-    print '%-25s' %printMeans ,
+    print('%-25s' %printMeans , end=' ')
     for n in range(0, n_features):
         Xn = 'X %d' %(n + 1)
-        print '%-8.4s' %Xn ,
-    print
-    print '-----------------------------------------------------------------------------------------'
+        print('%-8.4s' %Xn , end=' ')
+    print()
+    print('-----------------------------------------------------------------------------------------')
     for k in range(0, nClasses):
         ClassN = 'Class %d' %(k + 1)
-        print '%-20s' %ClassN ,
+        print('%-20s' %ClassN, end=' ')
         for n in range(0, n_features):
-            print '%8.4f' %means[k,n],
-        print
-    print
-    print '-----------------------------------------------------------------------------------------'
+            print('%8.4f' %means[k,n], end=' ')
+        print()
+    print()
+    print('-----------------------------------------------------------------------------------------')
     printMeans = 'Means (Dummy)'
-    print '%-25s' %printMeans ,
+    print('%-25s' %printMeans, end=' ')
     for n in range(0, n_dummyfeatures):
         Xn = 'X %d' %(n + 1)
-        print '%-8.4s' %Xn ,
-    print
-    print '-----------------------------------------------------------------------------------------'
+        print('%-8.4s' %Xn, end=' ')
+    print()
+    print('-----------------------------------------------------------------------------------------')
     for k in range(0, nClasses):
         ClassN = 'Class %d' %(k + 1)
-        print '%-20s' %ClassN ,
+        print('%-20s' %ClassN, end=' ')
         for n in range(0, n_dummyfeatures):
-            print '%8.4f' %means_dummy[k,n],
-        print
-    print
-    print '-----------------------------------------------------------------------------------------'
+            print('%8.4f' %means_dummy[k,n], end=' ')
+        print()
+    print()
+    print('-----------------------------------------------------------------------------------------')
     
     if covariance_type == 'spherical':
-        print 'Covariances'
-        print '-----------------------------------------------------------------------------------------'
+        print('Covariances')
+        print('-----------------------------------------------------------------------------------------')
         for k in range(0, nClasses):
             ClassN = 'Class %d' %(k + 1)
-            print '%-45s' %ClassN ,
-            print '%10.4f' %covariances[k]
-        print
+            print('%-45s' %ClassN, end=' ')
+            print('%10.4f' %covariances[k])
+        print()
 
     else:
         printCov = 'Covariances'
-        print '%-25s' %printCov ,
+        print('%-25s' %printCov, end=' ')
         for n in range(0, n_features):
             Xn = 'X %d' %(n + 1)
-            print '%-8.4s' %Xn ,
-        print
-        print '-----------------------------------------------------------------------------------------'
+            print('%-8.4s' %Xn, end=' ')
+        print()
+        print('-----------------------------------------------------------------------------------------')
 
         if covariance_type == 'full':    
             for k in range(0, nClasses):
                 for n1 in range(0, n_features):
                     ClassN = 'Class %d, X%d' %((k + 1), n1 + 1)
-                    print '%-20s' %ClassN ,
+                    print('%-20s' %ClassN, end=' ')
                     for n2 in range(0, n_features):
-                        print '%8.4f' %covariances[k,n1,n2],
-                    print
-                print
+                        print('%8.4f' %covariances[k,n1,n2], end=' ')
+                    print()
+                print()
 
         elif covariance_type == 'tied':
             for n1 in range(0,n_features):
                 Xn = 'X %d' %(n1 + 1)
-                print '%-20s' %Xn ,
+                print('%-20s' %Xn, end=' ')
                 for n2 in range(0,n_features):
-                    print '%8.4f' %covariances[n1,n2],
-                print
-            print
+                    print('%8.4f' %covariances[n1,n2], end=' ')
+                print()
+            print()
 
         elif covariance_type == 'diag':
             for k in range(0,nClasses):
                 ClassN = 'Class %d' %(k + 1)
-                print '%-20s' %ClassN ,
+                print('%-20s' %ClassN, end=' ')
                 for n1 in range(0,n_features):
-                    print '%8.4f' %covariances[k,n1],
-                print
-            print
+                    print('%8.4f' %covariances[k,n1], end=' ')
+                print()
+            print()
 
-    if prediction_test is 'Yes':
-        print
-        print '-----------------------------------------------------------------------------------------'
-        print ("Predicted Log-Likelihood:".ljust(45, ' ')),(str(round(llTestNormalized,2)).rjust(10,' '))
-        print
+    if prediction_test == 'Yes':
+        print()
+        print('-----------------------------------------------------------------------------------------')
+        print("Predicted Log-Likelihood:".ljust(45, ' '), str(round(llTestNormalized,2)).rjust(10,' '))
+        print()
 
     
 
@@ -1107,7 +1115,7 @@ def emAlgo(outputFilePath, outputFileName, outputFile, nClasses, covariance_type
     """ 
     
     startTime = datetime.now()
-    print 'Processing data'
+    print('Processing data')
     outputFile.write('Processing data\n')
 
     inds = np.unique(indID)
@@ -1119,11 +1127,11 @@ def emAlgo(outputFilePath, outputFileName, outputFile, nClasses, covariance_type
             nClasses, obsID, altID,
             choice, availAlts) 
 
-    print 'Initializing EM Algorithm...\n'
+    print('Initializing EM Algorithm...\n')
     outputFile.write('Initializing EM Algorithm...\n\n')
 
     # Initializing the parameters
-    converged, iterCounter, llOld = False, 0, -np.infty
+    converged, iterCounter, llOld = False, 0, -np.inf
 
     resp, nk, mixing_coefficients, means, means_dummy, covariances, precisions_chol, log_det = initialize_parameters(X, X_Dummy, tol, reg_covar, max_iter, covariance_type, \
                                                                                                                      nClasses, GMM_Initialization)
@@ -1145,7 +1153,7 @@ def emAlgo(outputFilePath, outputFileName, outputFile, nClasses, covariance_type
                                             precisions_chol, covariance_type, X, X_Dummy)
 
         currentTime = datetime.now().strftime('%a, %d %b %Y %H:%M:%S')
-        print '<%s> Iteration %d: %.4f' %(currentTime, iterCounter, llNew)
+        print('<%s> Iteration %d: %.4f' %(currentTime, iterCounter, llNew))
         outputFile.write('<%s> Iteration %d: %.4f\n' %(currentTime, iterCounter, llNew))
 
         # M-Step: Use the weights derived in the E-Step to update the model parameters.
@@ -1208,7 +1216,7 @@ def emAlgo(outputFilePath, outputFileName, outputFile, nClasses, covariance_type
 
     nAlts = np.unique(altID).shape[0]
 
-    if prediction_test is 'Yes':
+    if prediction_test == 'Yes':
         #### Prediction Test
         indsTest = np.unique(indIDTest)
         n_samples_Test, n_features_Test = XTest.shape
@@ -1243,7 +1251,7 @@ def emAlgo(outputFilePath, outputFileName, outputFile, nClasses, covariance_type
 
     ####
 
-    print '\nEnumerating choices for the sample'
+    print('\nEnumerating choices for the sample')
     outputFile.write('\nEnumerating choices for the sample\n')
 
 
@@ -1354,7 +1362,7 @@ def lccm_fit(data,
     altIDTest = []
     choiceTest = []
 
-    if prediction_test is 'Yes':
+    if prediction_test == 'Yes':
         # Generate columns representing individual, observation, and alternative id for the test dataset
         indIDTest = dataTest[ind_id_col].values
         obsIDTest = dataTest[obs_id_col].values
@@ -1389,7 +1397,7 @@ def lccm_fit(data,
 
     expVarsClassSpecTest = []
     
-    if prediction_test is 'Yes':
+    if prediction_test == 'Yes':
         design_matricesTest = [pylogit.choice_tools.create_design_matrix(dataTest, spec, alt_id_col)[0] 
     						for spec in class_specific_specs]
         expVarsClassSpecTest = [np.transpose(m) for m in design_matricesTest]
@@ -1414,7 +1422,7 @@ def lccm_fit(data,
     indWeightsTest = []
     if indWeights is None:    
         indWeights = np.ones((np.unique(indID).shape[0]))
-        if prediction_test is 'Yes':
+        if prediction_test == 'Yes':
             indWeightsTest = np.ones((np.unique(indIDTest).shape[0]))
     
     # defining the names of the explanatory variables for class specific model
@@ -1423,7 +1431,8 @@ def lccm_fit(data,
     namesExpVarsClassSpec = []
     for i in range(0, len(class_specific_labels)):
         name_iterator=[]
-        for key, value in class_specific_labels[i].iteritems() :
+        #for key, value in class_specific_labels[i].iteritems() :
+        for key, value in class_specific_labels[i].items() :
             if type(value) is list:
                 name_iterator += value
             else:
