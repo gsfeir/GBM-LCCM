@@ -27,7 +27,7 @@ Contributions, bug fixes, and feature suggestions are welcome. Please open an is
 ## Acknowledgements
 - **Author:** Georges Sfeir.
 - **Advising:** Filipe Rodrigues.
-- **Based On:** The latent class choice model (lccm) package, methodologies from Bishop's Pattern Recognition and Machine Learning, and some function from the GaussianMixture class of sklearn.mixture.
+- **Based On:** The latent class choice model (lccm) package, methodologies from Bishop's Pattern Recognition and Machine Learning, and some functions from the GaussianMixture class of sklearn.mixture.
 
 ## More Information
 For more information about the GBM_LCCM model see the following paper:
